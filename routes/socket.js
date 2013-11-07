@@ -27,7 +27,7 @@ var userNames = (function () {
   // serialize claimed names as an array
   var get = function () {
     var res = [];
-    for (user in names) {
+    for (var user in names) {
       res.push(user);
     }
 

@@ -60,7 +60,7 @@ function AppCtrl($scope, socket) {
       user: 'chatroom',
       text: 'User ' + oldName + ' is now known as ' + newName + '.'
     });
-  }
+  };
 
   // Methods published to the scope
   // ==============================
@@ -70,7 +70,7 @@ function AppCtrl($scope, socket) {
       name: $scope.newName
     }, function (result) {
       if (!result) {
-        alert('There was an error changing your name');
+        console.log('There was an error changing your name');
       } else {
         
         changeName($scope.name, $scope.newName);
