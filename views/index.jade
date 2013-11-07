@@ -9,8 +9,11 @@ block body
         p(ng-repeat='message in messages',
           ng-class='{alert: message.user == "chatroom"}') {{message.user}}: {{message.text}}
 
-    .col
-      h3 Users
+    .user_container
+      h3 {{name}}
+      ul
+        li(ng-class='current li_group') friends
+        li(ng-class='li_group') groups
       .overflowable
         p(ng-repeat='user in users') {{user}}
 
