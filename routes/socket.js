@@ -1,8 +1,8 @@
 // Keep track of which names are used so that there are no duplicates
-var userNames = (function () {
+var userNames = (function() {
     var names = {};
 
-    var claim = function (name) {
+    var claim = function(name) {
         if (!name || names[name]) {
             return false;
         } else {
@@ -12,9 +12,9 @@ var userNames = (function () {
     };
 
     // find the lowest unused "guest" name and claim it
-    var getGuestName = function () {
+    var getGuestName = function() {
         var name,
-        nextUserId = 1;
+            nextUserId = 1;
 
         do {
             name = 'Guest ' + nextUserId;
@@ -25,7 +25,7 @@ var userNames = (function () {
     };
 
     // serialize claimed names as an array
-    var get = function () {
+    var get = function() {
         var res = [];
         for (var user in names) {
             res.push(user);
@@ -34,7 +34,7 @@ var userNames = (function () {
         return res;
     };
 
-    var free = function (name) {
+    var free = function(name) {
         if (names[name]) {
             delete names[name];
         }
@@ -49,8 +49,22 @@ var userNames = (function () {
 }());
 
 // export function for listening to the socket
-module.exports = function (socket) {
+module.exports = function(socket) {
     var name = userNames.getGuestName();
+
+    console.log('user connected: ', socket.handshake.user.name);
+
+/*
+    //filter sockets by user...
+    var userGender = socket.handshake.user.gender,
+        opposite = userGender === "male" ? "female" : "male";
+
+    passportSocketIo.filterSocketsByUser(io, function(user) {
+        return user.gender === opposite;
+    }).forEach(function(s) {
+        s.send("a " + userGender + " has arrived!");
+    });
+*/
 
     // send the new user their name and a list of users
     socket.emit('init', {
@@ -64,7 +78,7 @@ module.exports = function (socket) {
     });
 
     // broadcast a user's message to other users
-    socket.on('send:message', function (data) {
+    socket.on('send:message', function(data) {
         socket.broadcast.emit('send:message', {
             user: name,
             text: data.message
@@ -72,7 +86,7 @@ module.exports = function (socket) {
     });
 
     // validate a user's name change, and broadcast it on success
-    socket.on('change:name', function (data, fn) {
+    socket.on('change:name', function(data, fn) {
         if (userNames.claim(data.name)) {
             var oldName = name;
             userNames.free(oldName);
@@ -91,7 +105,7 @@ module.exports = function (socket) {
     });
 
     // clean up when a user leaves, and broadcast it to other users
-    socket.on('disconnect', function () {
+    socket.on('disconnect', function() {
         socket.broadcast.emit('user:left', {
             name: name
         });

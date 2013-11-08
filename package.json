@@ -13,8 +13,8 @@
         "underscore": "*",
         "async": "*",
         "passport": "*",
-        "passport-local": "*",
-        "connect-flash": "*"
+        "connect-flash": "*",
+        "passport.socketio": "*"
     },
     "devDependencies": {
     "grunt-contrib-jshint": "~0.6.0",

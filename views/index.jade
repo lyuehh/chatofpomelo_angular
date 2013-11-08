@@ -1,25 +1,29 @@
 extends layout
 
 block body
-  h1 IMChat App
   div(ng-controller='AppCtrl')
-    .col
+    .chat_container
       h3 Messages
-      .overflowable
+      .message_container
         p(ng-repeat='message in messages',
           ng-class='{alert: message.user == "chatroom"}') {{message.user}}: {{message.text}}
 
     .user_container
       h3 {{name}}
-      ul
-        li(ng-class='current li_group') friends
-        li(ng-class='li_group') groups
-      .overflowable
-        p(ng-repeat='user in users') {{user}}
+      .group_container
+        ul.ul_group(ng-init='li_current="friends"')
+          li.li_group(ng-class='{li_current: li_current == "friends"}', ng-click='li_current="friends"') friends
+          li.li_group(ng-class='{li_current: li_current == "groups"}', ng-click='li_current="groups"') groups
+        .user_list.friends_list(ng-show='li_current == "friends"')
+          ul
+            li(ng-repeat='user in users')
+              a(ng-click='talkto({{user}})'){{user}}
+        .user_list.groups_list(ng-show='li_current == "groups"')
+          p 123123
+      
 
-    .clr
+    .clr.send
       form(ng-submit='sendMessage()')
-        | Message: 
         input(size='60', ng-model='message')
         input(type='submit', value='Send')
 

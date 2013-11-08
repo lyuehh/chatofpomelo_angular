@@ -1,0 +1,15 @@
+extends layout
+
+block body
+    div.message
+        if message
+            message
+    form(method="post", action="/login")
+        p
+            label(for="username") username:
+            input(type="text", name="username", id="username")
+        p
+            label(for="password") password:
+            input(type="password", name="password", id="password")
+        p
+            input(type="submit", value="Submit")

@@ -11,6 +11,11 @@ function AppCtrl($scope, socket) {
         $scope.name = data.name;
         $scope.users = data.users;
     });
+    socket.on('connect', function(data) {
+    });
+    socket.on('connect_failed', function() {
+        console.log('login failed');
+    });
 
     socket.on('send:message', function(message) {
         $scope.messages.push(message);

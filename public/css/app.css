@@ -1,10 +1,67 @@
 /* app css stylesheet */
 
+
+.group_container {
+    border: 1px solid #000;
+}
+.user_container {
+    float: right;
+    width: 350px;
+    margin-right: 150px;
+}
+.user_container .ul_group {
+    list-style: none;
+    padding-left: 10px;
+}
+.user_container .li_group {
+    float: left;
+    width: 80px;
+    cursor: pointer;
+}
+.ul_group .li_current {
+    text-decoration: underline;
+}
+
+.user_list {
+    clear: left;
+}
+
+
+.chat_container {
+    margin-left: 150px;
+    width: 500px;
+    display: inline-block;
+}
+
+.message_container {
+    border: 1px solid #000;
+    height: 300px;
+    overflow-y: auto;
+    clear: left;   
+}
+
+.send {
+    margin-left: 150px;
+}
+
+.user_list ul {
+    list-style: none;
+    padding-left: 10px;
+}
+.user_list ul li a {
+    cursor: pointer;
+}
+.user_list ul li a:hover {
+    text-decoration: underline;
+}
+
 .overflowable {
   height: 240px;
   overflow-y: auto;
-  border: 1px solid #000;
+  clear: left;   
 }
+
+
 
 .overflowable p {
   margin: 0;
@@ -13,10 +70,6 @@
 .col {
   float: left;
   width: 350px;
-}
-.user_container {
-    float: right;
-    width: 350px;
 }
 
 .clr {

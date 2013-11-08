@@ -7,8 +7,8 @@
 
 // Demonstrate how to register services
 // In this case it is a simple value service.
-app.factory('socket', function ($rootScope) {
-    var socket = io.connect();
+app.factory('socket', function ($rootScope, $location) {
+    var socket = io.connect('http://localhost:3000', {'force new connection':true});
     return {
         on: function (eventName, callback) {
             socket.on(eventName, function () {
