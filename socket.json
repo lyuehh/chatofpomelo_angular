@@ -1,0 +1,199 @@
+{
+    "id": "zEZbLd95GmjGpaTJKfTD",
+    "namespace": {
+        "manager": {
+            "server": {
+                "domain": null,
+                "_events": {},
+                "_maxListeners": 10,
+                "_connections": 6,
+                "connections": 6,
+                "_handle": {
+                    "fd": 12,
+                    "writeQueueSize": 0,
+                    "owner": "[Circular ~.namespace.manager.server]"
+                },
+                "_usingSlaves": false,
+                "_slaves": [],
+                "allowHalfOpen": true,
+                "httpAllowHalfOpen": false,
+                "timeout": 120000,
+                "_connectionKey": "4:0.0.0.0:3000"
+            },
+            "namespaces": {
+                "": "[Circular ~.namespace]"
+            },
+            "sockets": "[Circular ~.namespace]",
+            "_events": {
+                "set:transports": [null, null]
+            },
+            "settings": {
+                "origins": "*:*",
+                "log": true,
+                "store": {
+                    "clients": {
+                        "zEZbLd95GmjGpaTJKfTD": {
+                            "store": "[Circular ~.namespace.manager.settings.store]",
+                            "id": "zEZbLd95GmjGpaTJKfTD",
+                            "data": {}
+                        }
+                    },
+                    "manager": "[Circular ~.namespace.manager]"
+                },
+                "logger": {
+                    "colors": true,
+                    "level": 2,
+                    "enabled": true
+                },
+                "static": {
+                    "manager": "[Circular ~.namespace.manager]",
+                    "cache": {
+                        "/socket.io.js": {
+                            "content": [],
+                            "length": 74747,
+                            "mime": {
+                                "type": "application/javascript",
+                                "encoding": "utf8",
+                                "gzip": true
+                            },
+                            "etag": "0.9.16:91851971646982581044521885036510252188503",
+                            "versioned": false
+                        }
+                    },
+                    "paths": {
+                        "/static/flashsocket/WebSocketMain.swf": {
+                            "file": "/Users/weiwei/work/chat/imchat/node_modules/socket.io/node_modules/socket.io-client/lib/../dist/WebSocketMain.swf",
+                            "mime": {
+                                "type": "application/x-shockwave-flash",
+                                "encoding": "binary",
+                                "gzip": false
+                            }
+                        },
+                        "/static/flashsocket/WebSocketMainInsecure.swf": {
+                            "file": "/Users/weiwei/work/chat/imchat/node_modules/socket.io/node_modules/socket.io-client/lib/../dist/WebSocketMainInsecure.swf",
+                            "mime": "[Circular ~.namespace.manager.settings.static.paths./static/flashsocket/WebSocketMain.swf.mime]"
+                        },
+                        "/socket.io.js": {
+                            "mime": "[Circular ~.namespace.manager.settings.static.cache./socket.io.js.mime]"
+                        },
+                        "/socket.io.v": {
+                            "mime": "[Circular ~.namespace.manager.settings.static.cache./socket.io.js.mime]"
+                        },
+                        "/socket.io+": {
+                            "mime": "[Circular ~.namespace.manager.settings.static.cache./socket.io.js.mime]"
+                        }
+                    }
+                },
+                "heartbeats": true,
+                "resource": "/socket.io",
+                "transports": ["websocket", "htmlfile", "xhr-polling", "jsonp-polling"],
+                "blacklist": ["disconnect"],
+                "log level": 2,
+                "log colors": true,
+                "close timeout": 60,
+                "heartbeat interval": 25,
+                "heartbeat timeout": 60,
+                "polling duration": 20,
+                "flash policy server": true,
+                "flash policy port": 10843,
+                "destroy upgrade": true,
+                "destroy buffer size": 100000000,
+                "browser client": true,
+                "browser client cache": true,
+                "browser client minification": false,
+                "browser client etag": false,
+                "browser client expires": 315360000,
+                "browser client gzip": false,
+                "browser client handler": false,
+                "client store expiration": 15,
+                "match origin protocol": false
+            },
+            "handshaken": {
+                "zEZbLd95GmjGpaTJKfTD": {
+                    "headers": {
+                        "host": "localhost:3000",
+                        "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:25.0) Gecko/20100101 Firefox/25.0",
+                        "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+                        "accept-language": "zh-cn,zh;q=0.8,en-us;q=0.5,en;q=0.3",
+                        "accept-encoding": "gzip, deflate",
+                        "dnt": "1",
+                        "referer": "http://localhost:3000/index",
+                        "cookie": "imchat=s%3AYJ7dmBIIx4Tavdz66gFx7glm.zW5sxEkJ9TtczkFJY4B5Gp3lAaWFKUb3sWs50ainZr8",
+                        "connection": "keep-alive"
+                    },
+                    "address": {
+                        "address": "127.0.0.1",
+                        "port": 50111
+                    },
+                    "time": "Mon Nov 11 2013 11:17:34 GMT+0800 (CST)",
+                    "query": {
+                        "t": "1384139854462"
+                    },
+                    "url": "/socket.io/1/?t=1384139854462",
+                    "xdomain": false,
+                    "cookie": {
+                        "imchat": "YJ7dmBIIx4Tavdz66gFx7glm"
+                    },
+                    "sessionID": "YJ7dmBIIx4Tavdz66gFx7glm",
+                    "user": {
+                        "id": 1,
+                        "username": "user1",
+                        "password": "1111aaaa",
+                        "email": "usr1@example.com"
+                    }
+                }
+            },
+            "connected": {
+                "zEZbLd95GmjGpaTJKfTD": true
+            },
+            "open": {
+                "zEZbLd95GmjGpaTJKfTD": true
+            },
+            "closed": {},
+            "rooms": {
+                "": ["zEZbLd95GmjGpaTJKfTD"]
+            },
+            "roomClients": {
+                "zEZbLd95GmjGpaTJKfTD": {
+                    "": true
+                }
+            },
+            "oldListeners": [null],
+            "sequenceNumber": 1160377539,
+            "gc": {
+                "_idleTimeout": 10000,
+                "_idlePrev": {
+                    "_idleNext": "[Circular ~.namespace.manager.gc]",
+                    "_idlePrev": "[Circular ~.namespace.manager.gc]",
+                    "msecs": 10000
+                },
+                "_idleNext": "[Circular ~.namespace.manager.gc._idlePrev]",
+                "_idleStart": 1384139846938,
+                "_repeat": true
+            }
+        },
+        "name": "",
+        "sockets": {
+            "zEZbLd95GmjGpaTJKfTD": "[Circular ~]"
+        },
+        "auth": false,
+        "flags": {
+            "endpoint": "",
+            "exceptions": []
+        },
+        "_events": {
+            "connection": [null, null]
+        }
+    },
+    "manager": "[Circular ~.namespace.manager]",
+    "disconnected": false,
+    "ackPackets": 0,
+    "acks": {},
+    "flags": {
+        "endpoint": "",
+        "room": ""
+    },
+    "readable": true,
+    "store": "[Circular ~.namespace.manager.settings.store.clients.zEZbLd95GmjGpaTJKfTD]",
+    "_events": {}
+}

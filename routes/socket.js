@@ -1,75 +1,40 @@
-// Keep track of which names are used so that there are no duplicates
-var userNames = (function() {
-    var names = {};
+/* global io */
 
-    var claim = function(name) {
-        if (!name || names[name]) {
-            return false;
-        } else {
-            names[name] = true;
-            return true;
-        }
-    };
+var stringify = require('json-stringify-safe');
+var _ = require('underscore');
 
-    // find the lowest unused "guest" name and claim it
-    var getGuestName = function() {
-        var name,
-            nextUserId = 1;
-
-        do {
-            name = 'Guest ' + nextUserId;
-            nextUserId += 1;
-        } while (!claim(name));
-
-        return name;
-    };
-
-    // serialize claimed names as an array
-    var get = function() {
-        var res = [];
-        for (var user in names) {
-            res.push(user);
-        }
-
-        return res;
-    };
-
-    var free = function(name) {
-        if (names[name]) {
-            delete names[name];
-        }
-    };
-
-    return {
-        claim: claim,
-        free: free,
-        get: get,
-        getGuestName: getGuestName
-    };
-}());
-
+var users = []; // 连接上的所有用户
 // export function for listening to the socket
 module.exports = function(socket) {
-    var name = userNames.getGuestName();
+    var user = socket.handshake.user;
+    var name = user.username;
+    user.socketid = socket.id;
+    // 已经连接上的，就不再添加了
 
-    console.log('user connected: ', socket.handshake.user.name);
+    console.log('current: ' + stringify(user));
 
-/*
-    //filter sockets by user...
-    var userGender = socket.handshake.user.gender,
-        opposite = userGender === "male" ? "female" : "male";
-
-    passportSocketIo.filterSocketsByUser(io, function(user) {
-        return user.gender === opposite;
-    }).forEach(function(s) {
-        s.send("a " + userGender + " has arrived!");
+    var otherUsers = _.filter(users, function(i) {
+        return i.username !== name;
     });
-*/
+    var exist = _.filter(users, function(i) {
+        return i.username === name;
+    });
+
+    console.log('other: ' + stringify(otherUsers));
+    console.log('exist: ' + stringify(exist));
+
+    if (exist.length === 0) {
+        users.push(user);
+    }
+
+    console.log('users: ' + JSON.stringify(users));
+
 
     // send the new user their name and a list of users
     socket.emit('init', {
         name: name,
-        users: userNames.get()
+        user: user, // 当前用户
+        users: otherUsers // 所有用户
     });
 
     // notify other clients that a new user has joined
@@ -79,29 +44,24 @@ module.exports = function(socket) {
 
     // broadcast a user's message to other users
     socket.on('send:message', function(data) {
+        /*
         socket.broadcast.emit('send:message', {
             user: name,
             text: data.message
         });
+        */
+
+        io.sockets.socket(data.id).emit('send:message', data.message, data.from);
     });
 
     // validate a user's name change, and broadcast it on success
     socket.on('change:name', function(data, fn) {
-        if (userNames.claim(data.name)) {
-            var oldName = name;
-            userNames.free(oldName);
-
-            name = data.name;
-
-            socket.broadcast.emit('change:name', {
-                oldName: oldName,
-                newName: name
-            });
-
-            fn(true);
-        } else {
-            fn(false);
-        }
+        /*
+        socket.broadcast.emit('change:name', {
+            oldName: oldName,
+            newName: name
+        });
+        */
     });
 
     // clean up when a user leaves, and broadcast it to other users
@@ -109,6 +69,10 @@ module.exports = function(socket) {
         socket.broadcast.emit('user:left', {
             name: name
         });
-        userNames.free(name);
+        console.log('disconnect: ' + name);
+        
+        users = _.filter(users, function(i) {
+            return i.username !== name;
+        });
     });
 };

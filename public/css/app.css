@@ -39,6 +39,10 @@
     overflow-y: auto;
     clear: left;   
 }
+.messages {
+  height: 200px;
+  overflow-y: auto;
+}
 
 .send {
     margin-left: 150px;

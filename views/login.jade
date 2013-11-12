@@ -3,7 +3,7 @@ extends layout
 block body
     div.message
         if message
-            message
+            = message
     form(method="post", action="/login")
         p
             label(for="username") username:

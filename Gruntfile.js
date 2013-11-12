@@ -4,6 +4,21 @@ module.exports = function(grunt) {
 
     // Project configuration.
     grunt.initConfig({
+        env: {
+            options: {
+            },
+            dev: {
+                NODE_ENV: 'development',
+                DEST: 'temp'
+            },
+            build: {
+                NODE_ENV: 'production',
+                DEST: 'dist'
+            },
+            test: {
+                NODE_ENV: 'test',
+            }
+        },
         nodeunit: {
             files: ['test/**/*_test.js']
         },
@@ -34,6 +49,26 @@ module.exports = function(grunt) {
                 files: '<%= jshint.test.src %>',
                 tasks: ['jshint:test', 'nodeunit']
             }
+        },
+        mochaTest: {
+            test: {
+                options: {
+                    reporter: 'spec'
+                },
+                src: ['test/**/*.js']
+            }
+        },
+        simplemocha: {
+            options: {
+                globals: ['should'],
+                timeout: 1000,
+                ignoreLeaks: false,
+                ui: 'bdd',
+                reporter: 'spec'
+            },
+            all: {
+                src: ['test/**/*.js']
+            }
         }
     });
 
@@ -41,8 +76,14 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-nodeunit');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-mocha-test');
+    grunt.loadNpmTasks('grunt-simple-mocha');
+    grunt.loadNpmTasks('grunt-env');
 
     // Default task.
-    grunt.registerTask('default', ['jshint', 'nodeunit']);
+    //grunt.registerTask('default', ['jshint', 'nodeunit']);
+    //grunt.registerTask('default', ['jshint', 'mochaTest']);
+    grunt.registerTask('default', ['jshint', 'simplemocha']);
+    grunt.registerTask('test', ['env:test','jshint', 'simplemocha']);
 
 };

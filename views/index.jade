@@ -2,14 +2,20 @@ extends layout
 
 block body
   div(ng-controller='AppCtrl')
-    .chat_container
-      h3 Messages
+    
+    .chat_container(ng-repeat='c in conversations')
+      h3 chat with {{c.to.name}}
       .message_container
-        p(ng-repeat='message in messages',
-          ng-class='{alert: message.user == "chatroom"}') {{message.user}}: {{message.text}}
+        .messages
+          p(ng-repeat='message in c.messages',
+            ng-class='{alert: message.user == "chatroom"}') {{message.user}}: {{message.text}}
+        p.send_message
+          form(ng-submit='sendMessage(c.to.id, message)')
+            input(size='40', ng-model='message')
+            input(type='submit', value='Send')
 
     .user_container
-      h3 {{name}}
+      h3 {{user.username}}
       .group_container
         ul.ul_group(ng-init='li_current="friends"')
           li.li_group(ng-class='{li_current: li_current == "friends"}', ng-click='li_current="friends"') friends
@@ -17,27 +23,15 @@ block body
         .user_list.friends_list(ng-show='li_current == "friends"')
           ul
             li(ng-repeat='user in users')
-              a(ng-click='talkto({{user}})'){{user}}
+              a(ng-click="talkto(user.socketid, user.username)"){{user.username}}
         .user_list.groups_list(ng-show='li_current == "groups"')
           p 123123
-      
 
-    .clr.send
-      form(ng-submit='sendMessage()')
-        input(size='60', ng-model='message')
-        input(type='submit', value='Send')
 
-    .clr
-      h3 Change your name
-      p Your current user name is {{name}}
-      form(ng-submit='changeName()')
-        input(ng-model='newName')
-        input(type='submit', value='Change Name')
-
-  script(src='js/lib/angular/angular.js')
+  script(src='/js/lib/angular/angular.js')
   script(src='/socket.io/socket.io.js')
-  script(src='js/app.js')
-  script(src='js/services.js')
-  script(src='js/controllers.js')
-  script(src='js/filters.js')
-  script(src='js/directives.js')
+  script(src='/js/app.js')
+  script(src='/js/services.js')
+  script(src='/js/controllers.js')
+  script(src='/js/filters.js')
+  script(src='/js/directives.js')
