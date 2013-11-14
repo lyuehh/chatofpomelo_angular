@@ -15,6 +15,7 @@ var io = require('socket.io').listen(server, {
 var routes = require('./routes/index.js');
 //var socket = require('./routes/socket.js');
 var users = require('./model/users.js').users;
+var groups = require('./model/groups.js').groups;
 
 var _ = require('underscore');
 var flash = require('connect-flash');
@@ -193,7 +194,8 @@ io.sockets.on('connection', function(socket) {
     socket.emit('init', {
         name: name,
         user: user, // 当前用户
-        users: otherUsers // 所有用户
+        users: otherUsers, // 所有用户
+        groups: groups // 所有群组
     });
 
     // notify other clients that a new user has joined
@@ -211,6 +213,22 @@ io.sockets.on('connection', function(socket) {
         */
         console.log('server [send:message]: ' + stringify(data));
         io.sockets.socket(data.to.id).emit('send:message', data);
+    });
+
+    // user join group
+    socket.on('group:join', function(data) {
+        socket.room = data.group.name;
+        socket.join(data.group.name);
+        socket.broadcast.to(data.group.name).emit('send:group', {
+            message: data.user.name + ' has joined.',
+            from: {name: 'SERVER', id: 0},
+            to: {name: data.group.name, id: data.group.id}
+        });
+    });
+    // send group messages
+    socket.on("send:group", function(data) {
+        console.log('[server][send:group]' + stringify(data));
+        socket.broadcast.to(data.to.name).emit('send:group', data);
     });
 
     // validate a user's name change, and broadcast it on success

@@ -4,7 +4,7 @@ block body
     div.message
         if message
             = message
-    form(method="post", action="/login")
+    form(method="post", action="/login", id="form")
         p
             label(for="username") username:
             input(type="text", name="username", id="username")
@@ -12,4 +12,7 @@ block body
             label(for="password") password:
             input(type="password", name="password", id="password")
         p
-            input(type="submit", value="Submit")
+            input(type="submit", value="Submit", id="submit")
+    script(type='text/javascript').
+        $(function() {
+        })

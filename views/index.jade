@@ -4,15 +4,26 @@ block body
   div(ng-controller='AppCtrl')
     
     .chat_container(ng-repeat='c in conversations')
-      h3 chat with {{c.to.name}}
-      .message_container
-        .messages
-          p(ng-repeat='message in c.messages',
-            ng-class='{alert: message.user == "chatroom"}') {{message.user}}: {{message.text}}
-        p.send_message
-          form(ng-submit='sendMessage({name: c.from.name, id: c.from.id}, {name: c.to.name, id: c.to.id}, message)')
-            input(size='40', ng-model='message')
-            input(type='submit', value='Send')
+      .chat_container_user(ng-show='c.type == "private"')
+        h3 chat with {{c.to.name}}
+        .message_container
+          .messages
+            p(ng-repeat='message in c.messages',
+              ng-class='{alert: message.user == "chatroom"}') {{message.user}}: {{message.text}}
+          p.send_message
+            form(ng-submit='sendMessage({name: c.from.name, id: c.from.id}, {name: c.to.name, id: c.to.id}, message);message="";')
+              input(size='40', ng-model='message')
+              input(type='submit', value='Send')
+      .chat_container_user(ng-show='c.type == "group"')
+          h3 chat in group {{c.to.name}}
+          .message_container
+            .messages
+              p(ng-repeat='message in c.messages',
+                ng-class='{alert: message.user == "chatroom"}') {{message.user}}: {{message.text}}
+            p.send_message
+              form(ng-submit='sendMessageToGroup({name: c.from.name, id: c.from.id}, {name: c.to.name, id: c.to.id}, message);message="";')
+                input(size='40', ng-model='message')
+                input(type='submit', value='Send')
 
     .user_container
       h3 {{user.username}}
@@ -25,10 +36,13 @@ block body
             li(ng-repeat='user in users')
               a(ng-click="talkto(user.socketid, user.username)"){{user.username}}
         .user_list.groups_list(ng-show='li_current == "groups"')
-          p 123123
+          ul
+            li(ng-repeat='g in groups')
+              a(ng-click="talktoGroup({name: g.name, id: g.id}, user.username)") {{g.name}}
 
 
   script(src='/js/lib/angular/angular.js')
+  script(src='/js/lib/underscore.js')
   script(src='/socket.io/socket.io.js')
   script(src='/js/app.js')
   script(src='/js/services.js')
