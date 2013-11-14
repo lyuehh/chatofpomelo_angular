@@ -198,10 +198,10 @@ io.sockets.on('connection', function(socket) {
 
     // notify other clients that a new user has joined
     socket.broadcast.emit('user:join', {
-        name: name
+        user: user
     });
 
-    // broadcast a user's message to other connectedUsers
+    // send a user's message to other connectedUsers
     socket.on('send:message', function(data) {
         /*
         socket.broadcast.emit('send:message', {
@@ -210,7 +210,7 @@ io.sockets.on('connection', function(socket) {
         });
         */
         console.log('server [send:message]: ' + stringify(data));
-        io.sockets.socket(data.id).emit('send:message', data.message, data.from);
+        io.sockets.socket(data.to.id).emit('send:message', data);
     });
 
     // validate a user's name change, and broadcast it on success
@@ -226,9 +226,9 @@ io.sockets.on('connection', function(socket) {
     // clean up when a user leaves, and broadcast it to other connectedUsers
     socket.on('disconnect', function() {
         socket.broadcast.emit('user:left', {
-            name: name
+            user: user
         });
-        console.log('disconnect: ' + name);
+        console.log('disconnect: ' + stringify(user));
         
         connectedUsers = _.filter(connectedUsers, function(i) {
             return i.username !== name;

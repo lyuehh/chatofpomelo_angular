@@ -10,7 +10,7 @@ block body
           p(ng-repeat='message in c.messages',
             ng-class='{alert: message.user == "chatroom"}') {{message.user}}: {{message.text}}
         p.send_message
-          form(ng-submit='sendMessage(c.to.id, message)')
+          form(ng-submit='sendMessage({name: c.from.name, id: c.from.id}, {name: c.to.name, id: c.to.id}, message)')
             input(size='40', ng-model='message')
             input(type='submit', value='Send')
 

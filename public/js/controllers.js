@@ -8,21 +8,21 @@ function AppCtrl($scope, socket) {
     // ================
 
     socket.on('init', function(data) {
-        $scope.name = data.name;
-        $scope.users = data.users;
-        $scope.user = data.user;
-        console.log('users: ' + JSON.stringify(data.users));
+        $scope.name = data.name; // 当前用户名
+        $scope.users = data.users; // 当前的所有用户，不包含当前用户
+        $scope.user = data.user; // 当前用户
+        console.log('other_users: ' + JSON.stringify(data.users));
     });
     socket.on('connect', function(data) {
 
     });
-    socket.on('connect_failed', function() {
-        console.log('login failed');
+    socket.on('error', function() {
+        console.log('error!!!');
     });
 
-    socket.on('send:message', function(message, from) {
-        console.log('got message: ' + message + ', from: ' + from);
-        $scope.messages.push(message);
+    socket.on('send:message', function(data) {
+        console.log('[client]: got message: ' + JSON.stringify(data));
+        //$scope.messages.push(message);
     });
 
     socket.on('change:name', function(data) {
@@ -30,23 +30,30 @@ function AppCtrl($scope, socket) {
     });
 
     socket.on('user:join', function(data) {
+        /*
         $scope.messages.push({
             user: 'chatroom',
             text: 'User ' + data.name + ' has joined.'
         });
-        $scope.users.push(data.name);
+        */
+        console.log('[user:join] ' + JSON.stringify(data));
+        $scope.users.push(data.user);
+        console.log('$scope.users: ' + JSON.stringify($scope.users));
     });
 
     // add a message to the conversation when a user disconnects or leaves the room
     socket.on('user:left', function(data) {
+        /*
         $scope.messages.push({
             user: 'chatroom',
             text: 'User ' + data.name + ' has left.'
         });
+        */
+        console.log('[user:left] ' + JSON.stringify(data));
         var i, user;
         for (i = 0; i < $scope.users.length; i++) {
             user = $scope.users[i];
-            if (user === data.name) {
+            if (user.username === data.user.username) {
                 $scope.users.splice(i, 1);
                 break;
             }
@@ -62,11 +69,13 @@ function AppCtrl($scope, socket) {
     $scope.talkto = function(socketid, name) {
         var conversation = {
             type: 'private', // 私聊，2个人
-            socketids: [socketid, $scope.user.socketid],
-            users: [],
             to: {
                 id: socketid,
                 name: name
+            },
+            from: {
+                id: $scope.user.socketid,
+                name: $scope.user.username
             },
             messages: [{
                 user: 'user1',
@@ -80,15 +89,15 @@ function AppCtrl($scope, socket) {
         console.log($scope.conversations);
     };
 
-    $scope.sendMessage = function(id, message) { // id为房间名，或者私聊时对方的socketid
-        console.log('to id: ' + id + ', message: ' + message);
+    $scope.sendMessage = function(from, to, message) {
+        console.log('from : ' + JSON.stringify(from) + ', to: ' + JSON.stringify(to) + ', message: ' + message);
 
         socket.emit('send:message', {
             message: message,
-            to: id,
-            from: $scope.name
+            from: from,
+            to: to
         });
-
+/*
         // add the message to our model locally
         $scope.messages.push({
             user: $scope.name,
@@ -96,6 +105,6 @@ function AppCtrl($scope, socket) {
         });
 
         // clear message box
-        $scope.message = '';
+        $scope.message = ''; */
     };
 }
