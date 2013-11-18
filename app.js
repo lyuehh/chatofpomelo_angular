@@ -7,10 +7,6 @@ var express = require('express');
 var app = express();
 var server = http.createServer(app);
 
-// Hook Socket.io into Express
-var io = require('socket.io').listen(server, {
-    'log level': 0
-});
 
 var routes = require('./routes/index.js');
 //var socket = require('./routes/socket.js');
@@ -113,16 +109,13 @@ app.configure('development', function() {
         dumpExceptions: true,
         showStack: true
     }));
-    io.set('log level', 2);
 });
 
 app.configure('production', function() {
     app.use(express.errorHandler());
-    io.set('log level', 1);
 });
 
 app.configure('test', function() {
-    io.set('log level', 0);
 });
 
 
@@ -131,18 +124,6 @@ function ensureAuthenticated(req, res, next) {
     res.redirect('/login');
 }
 
-io.set('authorization', passportSocketIo.authorize({
-    cookieParser: express.cookieParser, //or connect.cookieParser
-    key: 'imchat', //the cookie where express (or connect) stores its session id.
-    secret: 'asdasdsdas1312312', //the session secret to parse the cookie
-    store: sessionStore, //the session store that express uses
-    fail: function(data, accept) { // *optional* callbacks on success or fail
-        accept(null, false); // second param takes boolean on whether or not to allow handshake
-    },
-    success: function(data, accept) {
-        accept(null, true);
-    }
-}));
 
 // Routes
 
@@ -164,95 +145,6 @@ app.get('/login', function(req, res, next) {
 // Socket.io Communication
 
 var connectedUsers = []; // 连接上的所有用户
-
-io.sockets.on('connection', function(socket) {
-    var user = socket.handshake.user;
-    var name = user.username;
-    user.socketid = socket.id;
-    // 已经连接上的，就不再添加了
-
-    console.log('current: ' + stringify(user));
-
-    var otherUsers = _.filter(connectedUsers, function(i) {
-        return i.username !== name;
-    });
-    var exist = _.filter(connectedUsers, function(i) {
-        return i.username === name;
-    });
-
-    console.log('other: ' + stringify(otherUsers));
-    console.log('exist: ' + stringify(exist));
-
-    if (exist.length === 0) {
-        connectedUsers.push(user);
-    }
-
-    console.log('connectedUsers: ' + JSON.stringify(connectedUsers));
-
-
-    // send the new user their name and a list of connectedUsers
-    socket.emit('init', {
-        name: name,
-        user: user, // 当前用户
-        users: otherUsers, // 所有用户
-        groups: groups // 所有群组
-    });
-
-    // notify other clients that a new user has joined
-    socket.broadcast.emit('user:join', {
-        user: user
-    });
-
-    // send a user's message to other connectedUsers
-    socket.on('send:message', function(data) {
-        /*
-        socket.broadcast.emit('send:message', {
-            user: name,
-            text: data.message
-        });
-        */
-        console.log('server [send:message]: ' + stringify(data));
-        io.sockets.socket(data.to.id).emit('send:message', data);
-    });
-
-    // user join group
-    socket.on('group:join', function(data) {
-        socket.room = data.group.name;
-        socket.join(data.group.name);
-        socket.broadcast.to(data.group.name).emit('send:group', {
-            message: data.user.name + ' has joined.',
-            from: {name: 'SERVER', id: 0},
-            to: {name: data.group.name, id: data.group.id}
-        });
-    });
-    // send group messages
-    socket.on("send:group", function(data) {
-        console.log('[server][send:group]' + stringify(data));
-        socket.broadcast.to(data.to.name).emit('send:group', data);
-    });
-
-    // validate a user's name change, and broadcast it on success
-    socket.on('change:name', function(data, fn) {
-        /*
-        socket.broadcast.emit('change:name', {
-            oldName: oldName,
-            newName: name
-        });
-        */
-    });
-
-    // clean up when a user leaves, and broadcast it to other connectedUsers
-    socket.on('disconnect', function() {
-        socket.broadcast.emit('user:left', {
-            user: user
-        });
-        console.log('disconnect: ' + stringify(user));
-        
-        connectedUsers = _.filter(connectedUsers, function(i) {
-            return i.username !== name;
-        });
-    });
-});
 
 
 var start = exports.start = function() {
