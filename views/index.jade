@@ -34,13 +34,16 @@ block body
         .user_list.friends_list(ng-show='li_current == "friends"')
           ul
             li(ng-repeat='user in users')
-              a(ng-click="talkto(user.socketid, user.username)"){{user.username}}
+              a(ng-click="talkto(user)"){{user}}
         .user_list.groups_list(ng-show='li_current == "groups"')
           ul
             li(ng-repeat='g in groups')
               a(ng-click="talktoGroup({name: g.name, id: g.id}, user.username)") {{g.name}}
 
 
+  script(src='/js/lib/jquery.min.js')
+  script(src='/js/lib/socket.io.js')
+  script(src='/js/lib/pomeloclient.js')
   script(src='/js/lib/angular/angular.js')
   script(src='/js/lib/underscore.js')
   script(src='/js/app.js')

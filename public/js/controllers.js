@@ -6,6 +6,77 @@
 
 function AppCtrl($scope) {
 
+    // query connector
+    var route = 'gate.gateHandler.queryEntry';
+    pomelo.init({
+        host: window.location.hostname,
+        port: 3014,
+        log: true
+    }, function() {
+        pomelo.request(route, {
+            uid: '111'
+        }, function(data) {
+            pomelo.disconnect();
+            if(data.code === 500) {
+                //showError(LOGIN_ERROR);
+                console.log("LOGIN ERROR!!");
+                return;
+            }
+            pomelo.init({
+                host: data.host,
+                port: data.port,
+                log: true
+            }, function() {
+                var route = "connector.entryHandler.enter";
+                pomelo.request(route, {
+                    username: '111',
+                    rid: '111'
+                }, function(data) {
+                    if(data.error) {
+                        console.log('name already taken, choose another');
+                        //showError(DUPLICATE_ERROR);
+                        return;
+                    }
+                    console.log(data.users);
+                    $scope.users = data.users;
+                    //setName();
+                    //setRoom();
+                    //showChat();
+                    //initUserList(data);
+                });
+            });
+            //callback(data.host, data.port);
+        });
+    });
+
+    //wait message from the server.
+    pomelo.on('onChat', function(data) {
+        //addMessage(data.from, data.target, data.msg);
+        //$("#chatHistory").show();
+        //if(data.from !== username)
+        //    tip('message', data.from);
+    });
+
+    //update user list
+    pomelo.on('onAdd', function(data) {
+        //var user = data.user;
+        //tip('online', user);
+        //addUser(user);
+    });
+
+    //update user list
+    pomelo.on('onLeave', function(data) {
+        //var user = data.user;
+        //tip('offline', user);
+        //removeUser(user);
+    });
+
+
+    //handle disconect message, occours when the client is disconnect with servers
+    pomelo.on('disconnect', function(reason) {
+        //showLogin();
+    });
+
     // Private helpers
     // ===============
 
@@ -28,6 +99,19 @@ function AppCtrl($scope) {
         };
         $scope.conversations.push(conversation);
         console.log($scope.conversations);
+
+        pomelo.request("chat.chatHandler.send", {
+            rid: rid,
+            content: msg,
+            from: username,
+            target: target
+        }, function(data) {
+            //$("#entry").attr("value", ""); // clear the entry field.
+            //if(target != '*' && target != username) {
+            //    addMessage(username, target, msg);
+            //    $("#chatHistory").show();
+            //}
+        });
     };
 
     // 发送 私聊消息
