@@ -26,7 +26,7 @@ block body
                 input(type='submit', value='Send')
 
     .user_container
-      h3 {{user.username}}
+      h3 {{user}}
       .group_container
         ul.ul_group(ng-init='li_current="friends"')
           li.li_group(ng-class='{li_current: li_current == "friends"}', ng-click='li_current="friends"') friends
@@ -38,9 +38,11 @@ block body
         .user_list.groups_list(ng-show='li_current == "groups"')
           ul
             li(ng-repeat='g in groups')
-              a(ng-click="talktoGroup({name: g.name, id: g.id}, user.username)") {{g.name}}
+              a(ng-click="talktoGroup({name: g.name, id: g.id}, user)") {{g.name}}
 
-
+  script(type="text/javascript").
+    var name = "#{user.username}"
+    var email = "#{user.email}";
   script(src='/js/lib/jquery.min.js')
   script(src='/js/lib/socket.io.js')
   script(src='/js/lib/pomeloclient.js')

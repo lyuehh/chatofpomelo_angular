@@ -1,4 +1,5 @@
-/* global _ */
+/* global _, name, email */
+/* name, email was in index.jade */
 
 'use strict';
 
@@ -29,8 +30,8 @@ function AppCtrl($scope) {
             }, function() {
                 var route = "connector.entryHandler.enter";
                 pomelo.request(route, {
-                    username: '111',
-                    rid: '111'
+                    username: name,
+                    rid: email.split('@')[1]
                 }, function(data) {
                     if(data.error) {
                         console.log('name already taken, choose another');
@@ -39,6 +40,7 @@ function AppCtrl($scope) {
                     }
                     console.log(data.users);
                     $scope.users = data.users;
+                    $scope.user = name;
                     //setName();
                     //setRoom();
                     //showChat();

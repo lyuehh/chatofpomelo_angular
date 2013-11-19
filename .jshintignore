@@ -2,3 +2,5 @@ public/js/lib/angular/angular-*.js
 public/js/lib/angular/angular.min.js
 public/js/lib/angular/angular.js
 public/js/lib/underscore.js
+public/js/lib/jquery.min.js
+public/js/lib/socket.io.js

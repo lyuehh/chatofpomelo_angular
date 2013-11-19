@@ -50,6 +50,16 @@ function findByUsername(username, fn) {
     return fn(null, null);
 }
 
+function findByEmail(email, fn) {
+    for (var i = 0, len = users.length; i < len; i++) {
+        var user = users[i];
+        if (user.email === email) {
+            return fn(null, user);
+        }
+    }
+    return fn(null, null);
+}
+
 passport.serializeUser(function(user, done) {
     done(null, user.id);
 });
@@ -63,7 +73,8 @@ passport.deserializeUser(function(id, done) {
 // passport
 passport.use(new LocalStrategy(
     function(username, password, done) {
-        findByUsername(username, function(err, user) {
+        console.log(username + ' ' + password);
+        findByEmail(username, function(err, user) {
             if (err) {
                 return done(err);
             }
@@ -101,9 +112,6 @@ app.configure(function() {
     app.use(app.router);
 });
 
-
-
-
 app.configure('development', function() {
     app.use(express.errorHandler({
         dumpExceptions: true,
@@ -128,7 +136,9 @@ function ensureAuthenticated(req, res, next) {
 // Routes
 
 app.get('/', routes.login);
-app.get('/index', ensureAuthenticated, routes.index);
+app.get('/index', ensureAuthenticated, function(req, res, next) {
+    res.render('index', { user: req.user });
+});
 // app.get('/partials/:name', routes.partials);
 app.post('/login', passport.authenticate('local', {
     successRedirect: '/index',

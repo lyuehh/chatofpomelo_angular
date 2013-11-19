@@ -8,7 +8,7 @@
   "sub": true,
   "undef": true,
   "unused": false,
-  "quotmark": "single",
+  //"quotmark": "single",
   "trailing": true,
   "node": true,
   "browser": true,
