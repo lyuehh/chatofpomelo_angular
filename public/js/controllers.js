@@ -7,15 +7,17 @@
 
 function AppCtrl($scope) {
 
+    //$scope.users = ['1', '2'];
+    //$scope.user = name;
+
     // query connector
-    var route = 'gate.gateHandler.queryEntry';
     pomelo.init({
         host: window.location.hostname,
         port: 3014,
         log: true
     }, function() {
-        pomelo.request(route, {
-            uid: '111'
+        pomelo.request('gate.gateHandler.queryEntry', {
+            uid: email
         }, function(data) {
             pomelo.disconnect();
             if(data.code === 500) {
@@ -28,8 +30,7 @@ function AppCtrl($scope) {
                 port: data.port,
                 log: true
             }, function() {
-                var route = "connector.entryHandler.enter";
-                pomelo.request(route, {
+                pomelo.request("connector.entryHandler.enter", {
                     username: name,
                     rid: email.split('@')[1]
                 }, function(data) {
@@ -38,13 +39,9 @@ function AppCtrl($scope) {
                         //showError(DUPLICATE_ERROR);
                         return;
                     }
-                    console.log(data.users);
                     $scope.users = data.users;
                     $scope.user = name;
-                    //setName();
-                    //setRoom();
-                    //showChat();
-                    //initUserList(data);
+                    $scope.$apply();
                 });
             });
             //callback(data.host, data.port);
@@ -53,6 +50,7 @@ function AppCtrl($scope) {
 
     //wait message from the server.
     pomelo.on('onChat', function(data) {
+        console.log('[client][onChat] data: ' + JSON.stringify(data));
         //addMessage(data.from, data.target, data.msg);
         //$("#chatHistory").show();
         //if(data.from !== username)
@@ -61,21 +59,24 @@ function AppCtrl($scope) {
 
     //update user list
     pomelo.on('onAdd', function(data) {
-        //var user = data.user;
-        //tip('online', user);
-        //addUser(user);
+        console.log('[client][onAdd] data: ' + JSON.stringify(data));
+        $scope.users.push(data.user);
+        $scope.$apply();
     });
 
     //update user list
     pomelo.on('onLeave', function(data) {
-        //var user = data.user;
-        //tip('offline', user);
-        //removeUser(user);
+        console.log('[client][onLeave] data: ' + JSON.stringify(data));
+        $scope.users = _.filter($scope.users, function(u) {
+            return u !== data.user;
+        });
+        $scope.$apply();
     });
 
 
     //handle disconect message, occours when the client is disconnect with servers
     pomelo.on('disconnect', function(reason) {
+        console.log('[client][disconnect] reason: ' + JSON.stringify(reason));
         //showLogin();
     });
 
