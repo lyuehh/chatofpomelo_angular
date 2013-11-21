@@ -9,6 +9,7 @@ function AppCtrl($scope) {
 
     //$scope.users = ['1', '2'];
     //$scope.user = name;
+    $scope.groups = [{name: 'group1'}, {name: 'group2'}, {name: 'group3'}];
 
     // query connector
     pomelo.init({
@@ -51,30 +52,57 @@ function AppCtrl($scope) {
     //wait message from the server.
     pomelo.on('onChat', function(data) {
         console.log('[client][onChat] data: ' + JSON.stringify(data));
-        var conversation = _.filter($scope.conversations, function(c) {
-            return (c.from === data.from && c.to === data.to) ||
-                (c.from === data.to && c.to === data.from);
-        });
-        if (name === data.from) {
-            return;
-        }
-        if (conversation.length === 0) {
-            var c = {
-                type: 'private', // 私聊，2个人
-                from: data.to,
-                to: data.from,
-                messages: [{
+        if (data.type === 'private') {
+            var conversation = _.filter($scope.conversations, function(c) {
+                return (c.from === data.from && c.to === data.to) ||
+                    (c.from === data.to && c.to === data.from);
+            });
+            if (name === data.from) {
+                return;
+            }
+            if (conversation.length === 0) {
+                var c = {
+                    type: 'private', // 私聊，2个人
+                    from: data.to,
+                    to: data.from,
+                    messages: [{
+                        user: data.from,
+                        message: data.message
+                    }]
+                };
+                $scope.conversations.push(c);
+            } else {
+                conversation[0].messages.push({
                     user: data.from,
                     message: data.message
-                }]
-            };
-            $scope.conversations.push(c);
-        } else {
-            conversation[0].messages.push({
-                user: data.from,
-                message: data.message
+                });
+            }
+        } else if (data.type === 'group') {
+            var conversation = _.filter($scope.conversations, function(c) {
+                return c.to === data.to;
             });
+            if (name === data.from) {
+                return;
+            }
+            if (conversation.length === 0) {
+                var c = {
+                    type: 'group', // 私聊，2个人
+                    from: data.from,
+                    to: data.to,
+                    messages: [{
+                        user: data.from,
+                        message: data.message
+                    }]
+                };
+                $scope.conversations.push(c);
+            } else {
+                conversation[0].messages.push({
+                    user: data.from,
+                    message: data.message
+                });
+            }
         }
+        
         $scope.$apply();
         //addMessage(data.from, data.target, data.msg);
         //$("#chatHistory").show();
@@ -112,9 +140,9 @@ function AppCtrl($scope) {
     $scope.conversations = [];
 
     // 私聊, 弹出消息框
-    $scope.talkto = function(name) {
+    $scope.talkto = function(name, type) {
         var conversation = {
-            type: 'private', // 私聊，2个人
+            type: type, // type
             to: name,
             from: $scope.user,
             messages: []

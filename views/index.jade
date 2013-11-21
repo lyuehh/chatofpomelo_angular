@@ -34,11 +34,11 @@ block body
         .user_list.friends_list(ng-show='li_current == "friends"')
           ul
             li(ng-repeat='user in users')
-              a(ng-click="talkto(user)"){{user}}
+              a(ng-click="talkto(user, 'private')"){{user}}
         .user_list.groups_list(ng-show='li_current == "groups"')
           ul
             li(ng-repeat='g in groups')
-              a(ng-click="talkto(g.name)") {{g.name}}
+              a(ng-click="talkto(g.name, 'group')") {{g.name}}
 
   script(type="text/javascript").
     var name = "#{user.username}";
