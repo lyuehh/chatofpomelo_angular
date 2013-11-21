@@ -3,6 +3,28 @@ extends layout
 block body
   div(ng-controller='AppCtrl')
 
+    .chat_container(ng-repeat='c in conversations')
+      .chat_container_user(ng-show='c.type == "private"')
+        h3 chat with {{c.to}}
+        .message_container
+          .messages
+            p(ng-repeat='m in c.messages',
+              ng-class='{alert: m.user == "chatroom"}') {{m.user}}: {{m.message}}
+          p.send_message
+            form(ng-submit='sendMessage(c.from, c.to, message, "private");message="";')
+              input(size='40', ng-model='message')
+              input(type='submit', value='Send')
+      .chat_container_user(ng-show='c.type == "group"')
+          h3 chat in group {{c.to}}
+          .message_container
+            .messages
+              p(ng-repeat='m in c.messages',
+                ng-class='{alert: m.user == "chatroom"}') {{m.user}}: {{m.message}}
+            p.send_message
+              form(ng-submit='sendMessage(c.from, c.to, message, "group");message="";')
+                input(size='40', ng-model='message')
+                input(type='submit', value='Send')
+
     .user_container
       h3 {{user}}
       .group_container
@@ -16,7 +38,7 @@ block body
         .user_list.groups_list(ng-show='li_current == "groups"')
           ul
             li(ng-repeat='g in groups')
-              a(ng-click="talktoGroup({name: g.name, id: g.id}, user)") {{g.name}}
+              a(ng-click="talkto(g.name)") {{g.name}}
 
   script(type="text/javascript").
     var name = "#{user.username}";
