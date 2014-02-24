@@ -86,7 +86,7 @@ function AppCtrl($scope) {
             }
             if (conversation.length === 0) {
                 var c = {
-                    type: 'group', // 私聊，2个人
+                    type: 'group', // 群组聊天
                     from: data.from,
                     to: data.to,
                     messages: [{
